@@ -1,0 +1,15 @@
+{% extends 'main/index.html' %}
+
+{% block title %}Maxot Notes{% endblock %}
+
+{% block content %}
+    <div>
+        <h4>Заметки:</h4>
+
+        {% for note in notes %}
+            <h4>{{ note.title }}</h4>
+            <p>{{ note.text  }}</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}
