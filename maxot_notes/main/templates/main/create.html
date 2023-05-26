@@ -1,0 +1,15 @@
+{% extends 'main/index.html' %}
+
+{% block title %}Create Note{% endblock %}
+
+{% block content %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.title }}<br>
+            {{ form.text }}<br>
+            <span>{{ error }}</span>
+            <button type="submit">Save</button> 
+        </form>
+    </div>
+{% endblock %}
