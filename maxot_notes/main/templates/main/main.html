@@ -4,12 +4,18 @@
 
 {% block content %}
     <div>
-        <h4>Заметки:</h4>
-
-        {% for note in notes %}
-            <h4>{{ note.title }}</h4>
-            <p>{{ note.text  }}</p>
-        {% endfor %}
+        <h4>Notes:</h4>
+        {% if notes %}
+            {% for note in notes %}
+                <div style="background-color: #4f4f4f">
+                    <h4>{{ note.title }}</h4>
+                    <p>{{ note.text  }}</p>
+                    <p>{{ note.last_save }}</p>
+                </div><br>
+            {% endfor %}
+        {% else %}
+            <p>You don't have any notes yet</p>
+        {% endif %}
+        <a href="{% url 'create' %}"><button>Create Note</a>
     </div>
-
 {% endblock %}
