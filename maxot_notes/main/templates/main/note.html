@@ -1,0 +1,15 @@
+{% extends 'main/index.html' %}
+
+{% block title %}Notes{% endblock %}
+
+{% block content %}
+    <div>
+        <h4>Note: {{ note.title }}</h4>
+        <div style="background-color: #4f4f4f">
+            <p>{{ note.text  }}</p>
+            <p>{{ note.last_save }}</p>
+            <a href="{% url 'note_edit' note.id %}" style="color: #ffffff; text-decoration: none">Edit</a>
+        </div>
+        
+    </div>
+{% endblock %}

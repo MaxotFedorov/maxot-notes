@@ -11,6 +11,7 @@
                     <h4>{{ note.title }}</h4>
                     <p>{{ note.text  }}</p>
                     <p>{{ note.last_save }}</p>
+                    <a href="{% url 'note' note.id %}" style="color: #ffffff; text-decoration: none">View</a>
                 </div><br>
             {% endfor %}
         {% else %}
