@@ -1,3 +1,4 @@
+from typing import Set
 from django.db import models
 
 class Note(models.Model):
@@ -7,3 +8,6 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self) -> Set[str]:
+        return f'/note_{self.id}'
