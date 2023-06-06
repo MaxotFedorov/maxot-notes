@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'main/js/scripts.js' %}"></script>
+    {% block scripts %}
+    {% endblock %}   
 </head>
 <body>
     <aside>
@@ -17,6 +21,8 @@
     <main>
         {% block content %}
         {% endblock %}
+        <div id="search-results">
+        </div>
     </main>
 </body>
 </html>
