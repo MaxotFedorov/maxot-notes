@@ -5,6 +5,9 @@
 {% block content %}
     <div>
         <h4>Notes:</h4>
+        <form action="{% url 'search' %}" method="get">
+            <input name="search", type="text", placeholder="Search">
+        </form>
         {% if notes %}
             {% for note in notes %}
                 <div style="background-color: #4f4f4f">
