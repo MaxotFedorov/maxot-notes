@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from main.models import Note
 from main.forms import NoteForm
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import DetailView, UpdateView, ListView
 from datetime import datetime
 import re
 
@@ -70,3 +71,16 @@ class NoteUpdateView(UpdateView):
             
         note.save()
         return redirect('main')
+    
+
+class SearchListView(ListView):
+    model = Note
+    template_name = 'main/main.html'
+    context_object_name = 'notes'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        notes = Note.objects.filter(
+            Q(title__icontains=query) | Q(text__icontains=query)
+        )
+        return notes
