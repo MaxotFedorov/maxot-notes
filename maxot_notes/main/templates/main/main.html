@@ -46,6 +46,7 @@
                             $('#search-results').html($(response).find('#search-results').html());
                         },
                         error: function(xhr, errmsg, err) {
+                            console.log(errmsg);
                         }
                     });
                 }, 500);
