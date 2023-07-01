@@ -1,12 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.db.models import Q
 from main.models import Note
 from django.contrib.auth.models import User
 #from django.contrib.auth.decorators import login_required
 from main.forms import NoteForm
+from django.http import HttpResponseForbidden
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import DetailView, UpdateView, ListView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime
 import re
 
@@ -50,16 +52,28 @@ def create(request):
                   {'form': form, 'error': error})
 
 
-class NoteDetailView(DetailView):
+class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
     template_name = 'main/note.html'
     context_object_name = 'note'
 
+    def dispatch(self, request, *args, **kwargs):
+        note = self.get_object()
+        if request.user not in note.access.all():
+            return HttpResponseForbidden("You don't have permission to access this note.")
+        return super().dispatch(request, *args, **kwargs)
+            
 
-class NoteUpdateView(UpdateView):
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
     model = Note
     template_name = 'main/create.html'
     form_class = NoteForm
+
+    def dispatch(self, request, *args, **kwargs):
+        note = self.get_object()
+        if request.user not in note.access.all():
+            return HttpResponseForbidden("You don't have permission to access this note.")
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         note = form.save(commit=False)
