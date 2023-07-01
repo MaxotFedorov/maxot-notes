@@ -9,6 +9,11 @@
             <p>{{ note.text  }}</p>
             <p>{{ note.last_save }}</p>
             <a href="{% url 'note_edit' note.id %}" style="color: #ffffff; text-decoration: none">Edit</a>
+            <br>
+            Allowed users:
+            {% for user in note.access.all %}
+                {{ user.username }}
+            {% endfor %}
         </div>
         
     </div>
