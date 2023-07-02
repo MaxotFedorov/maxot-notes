@@ -16,8 +16,9 @@
     <aside>
         <ul>
             <li><a href="{% url 'main' %}" style="color: #ffffff; text-decoration: none">Main</a></li>
+            <li><a href="{% url 'all_users' %}" style="color: #ffffff; text-decoration: none">All Users</a></li>
             {% if user.is_authenticated %}
-            <li>User: {{ user.get_username }}</li>
+            <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">User: {{ user.get_username }}</a></li>
             <li><a href="{% url 'logout'%}" style="color: #ffffff; text-decoration: none">Logout</a></li>
             {% else %}
             <li><a href="{% url 'login'%}" style="color: #ffffff; text-decoration: none">Login</a></li>

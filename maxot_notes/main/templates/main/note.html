@@ -1,6 +1,6 @@
 {% extends 'main/index.html' %}
 
-{% block title %}Notes{% endblock %}
+{% block title %}Note{% endblock %}
 
 {% block content %}
     <div>
@@ -10,10 +10,12 @@
             <p>{{ note.last_save }}</p>
             <a href="{% url 'note_edit' note.id %}" style="color: #ffffff; text-decoration: none">Edit</a>
             <br>
-            Allowed users:
-            {% for user in note.access.all %}
-                {{ user.username }}
-            {% endfor %}
+            <p>Allowed users:</p>
+            <ul>
+                {% for user in note.access.all %}
+                <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">{{ user.get_username }}</a></li>
+                {% endfor %}
+            </ul>
         </div>
         
     </div>
