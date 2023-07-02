@@ -8,9 +8,11 @@
             <p>Users:</p>
             <ul>
                 {% for user in received_users %}                 
-                    <li>
-                        <img class="profile-image" src="{{ user.profile.image.url }}">
-                        <a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">{{ user.username }}</a>
+                    <li>                        
+                        <a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">
+                            <img class="profile-image" src="{{ user.profile.image.url }}">
+                            {{ user.username }}
+                        </a>
                     </li>
                 {% endfor %}
             <ul>

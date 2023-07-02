@@ -13,7 +13,10 @@
             <p>Allowed users:</p>
             <ul>
                 {% for user in note.access.all %}
-                <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">{{ user.get_username }}</a></li>
+                <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">
+                    <img class="profile-image" src="{{ user.profile.image.url }}">
+                    {{ user.get_username }}</a>
+                </li>
                 {% endfor %}
             </ul>
         </div>
