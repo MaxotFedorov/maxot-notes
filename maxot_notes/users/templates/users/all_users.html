@@ -5,14 +5,12 @@
 {% block content %}
     <div>    
         {% if received_users %}
-            {% for user in received_users %}
-                <p>User:</p> 
-                <p><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">{{ user.username }}</a></p>
-                <p>Date Joined:</p>
-                <p>{{ user.date_joined }}</p>
-                <p>Last Login:</p>
-                <p>{{ user.last_login }}</p>
-            {% endfor %}
+            <p>Users:</p>
+            <ul>
+                {% for user in received_users %}                 
+                    <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">{{ user.username }}</a></li>
+                {% endfor %}
+            <ul>
         {% else %}
             <p>Something went wrong!</p>
         {% endif %}
