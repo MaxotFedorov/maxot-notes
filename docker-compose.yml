@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./maxot_notes/.env
+    volumes:
+      - ./media:/app/media
     expose:
       - 8000
     ports:
