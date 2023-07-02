@@ -1,13 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.db.models import Q
 from main.models import Note
-from django.contrib.auth.models import User
 #from django.contrib.auth.decorators import login_required
 from main.forms import NoteForm
 from django.http import HttpResponseForbidden
-from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import DetailView, UpdateView, ListView, CreateView
+from django.views.generic import DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime
 import re
@@ -110,9 +108,3 @@ class SearchListView(ListView):
             ).order_by('-last_save')
             return notes
         else: return redirect('login')
-
-
-class SignUp(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy("login")
-    template_name = "registration/signup.html"
