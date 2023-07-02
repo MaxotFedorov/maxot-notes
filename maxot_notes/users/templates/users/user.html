@@ -6,6 +6,7 @@
     <div>    
         {% if received_user %}
             <p>User:</p> 
+            <img class="profile-image" src="{{ user.profile.image.url }}">
             <p>{{ received_user.username }}</p>
             <p>Date Joined:</p>
             <p>{{ received_user.date_joined }}</p>
