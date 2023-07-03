@@ -5,8 +5,19 @@
 {% block content %}
     <div>    
         {% if received_user %}
+            {% if received_user == user %}
+            <p>Your account:</p>            
+            {% else %}
             <p>User:</p> 
+            {% endif %}
             <img class="profile-image" src="{{ received_user.profile.image.url }}">
+            {% if form  %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p>{{ form.image }}</p>
+                    <button type="submit">Save</button> 
+                </form>
+            {% endif %}
             <p>{{ received_user.username }}</p>
             <p>Date Joined:</p>
             <p>{{ received_user.date_joined }}</p>
