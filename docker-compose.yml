@@ -36,16 +36,6 @@ services:
     ports:
       - "5432:5432"
 
-  pgadmin:
-    container_name: pgadmin-local
-    image: dpage/pgadmin4:latest
-    ports:
-      - 5050:5050
-    depends_on:
-      - database
-    env_file:
-      - ./pgadmin.env
-
 networks:
   default:
     external:
