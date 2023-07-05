@@ -1,5 +1,8 @@
 # maxot-notes
 
+## Tests 
+![Tests](https://ci.maxot.xyz/buildStatus/icon?job=maxot-notes-tests)
+
 ## Start up instructions:
 
 1) Add `.env` file to project directory and set all necessary params
