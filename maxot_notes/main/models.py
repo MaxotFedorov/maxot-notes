@@ -6,7 +6,14 @@ class Note(models.Model):
     title = models.CharField('title', max_length=64, blank=True)
     text = models.TextField('text')
     last_save = models.DateTimeField('last_save', blank=True)
-    access = models.ManyToManyField(User, blank=True)
+    owner = models.ForeignKey(User, blank=True,
+                              on_delete=models.CASCADE,
+                              related_name='oowner_notes')    
+    editor = models.ManyToManyField(User, blank=True, 
+                                    related_name='editor_notes')
+    viewer = models.ManyToManyField(User, blank=True, 
+                                    related_name='viewer_notes')
+    
 
     def __str__(self):
         return self.title

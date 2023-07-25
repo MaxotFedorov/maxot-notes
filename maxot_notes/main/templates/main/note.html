@@ -10,15 +10,42 @@
             <p>{{ note.last_save }}</p>
             <a href="{% url 'note_edit' note.id %}" style="color: #ffffff; text-decoration: none">Edit</a>
             <br>
-            <p>Allowed users:</p>
+
+            <p>Owner users:</p>
             <ul>
-                {% for user in note.access.all %}
-                <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">
-                    <img class="profile-image" src="{{ user.profile.image.url }}">
-                    {{ user.get_username }}</a>
+                <li><a href="{% url 'username' note.owner.username %}" style="color: #ffffff; text-decoration: none">
+                    <img class="profile-image" src="{{ note.owner.profile.image.url }}">
+                    {{ note.owner.get_username }}</a>
                 </li>
-                {% endfor %}
             </ul>
+
+            {% if note.editor.all %}
+                <p>Editors users:</p>
+                <ul>
+                    {% for user in note.editor.all %}
+                    <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">
+                        <img class="profile-image" src="{{ user.profile.image.url }}">
+                        {{ user.get_username }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No editors found</p>
+            {% endif %}      
+            
+            {% if note.viewer.all %}
+                <p>Viewers users:</p>
+                <ul>
+                    {% for user in note.viewer.all %}
+                    <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">
+                        <img class="profile-image" src="{{ user.profile.image.url }}">
+                        {{ user.get_username }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No viewers found</p>
+            {% endif %} 
         </div>
         
     </div>

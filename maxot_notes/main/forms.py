@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 class NoteForm(ModelForm):
     class Meta:
         model = Note
-        fields = ['title', 'text', 'last_save', 'access']
+        fields = ['title', 'text', 'last_save', 
+                  'owner', 'editor', 'viewer']
         widgets = {
             "title": TextInput(attrs={
                 "placeholder" : "Title"
