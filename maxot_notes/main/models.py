@@ -8,7 +8,7 @@ class Note(models.Model):
     last_save = models.DateTimeField('last_save', blank=True)
     owner = models.ForeignKey(User, blank=True,
                               on_delete=models.CASCADE,
-                              related_name='oowner_notes')    
+                              related_name='owner_notes')    
     editor = models.ManyToManyField(User, blank=True, 
                                     related_name='editor_notes')
     viewer = models.ManyToManyField(User, blank=True, 

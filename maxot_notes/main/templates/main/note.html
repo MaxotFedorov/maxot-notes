@@ -9,6 +9,7 @@
             <p>{{ note.text  }}</p>
             <p>{{ note.last_save }}</p>
             <a href="{% url 'note_edit' note.id %}" style="color: #ffffff; text-decoration: none">Edit</a>
+            <a href="{% url 'note_delete' note.id %}" style="color: #ffffff; text-decoration: none">Delete</a>
             <br>
 
             <p>Owner users:</p>

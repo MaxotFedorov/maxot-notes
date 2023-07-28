@@ -17,6 +17,11 @@ class NoteForm(ModelForm):
                 "placeholder" : "Note"
             })
         }
+        
+        
+class NoteUpdateForm(NoteForm):
+    class Meta(NoteForm.Meta):
+        exclude = ['owner']
 
 
 class UserRegistrationForm(ModelForm):

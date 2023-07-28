@@ -1,14 +1,15 @@
-from django.shortcuts import redirect
-from django.db.models import Q
-from main.models import Note
-#from django.contrib.auth.decorators import login_required
-from main.forms import NoteForm
-from django.http import HttpResponseForbidden
-from django.views.generic import DetailView, UpdateView, \
-                                ListView, FormView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from datetime import datetime
-import re
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.db.models import Q
+from django.http import HttpResponseForbidden
+from django.views.generic import (
+    DetailView, UpdateView, 
+    ListView, FormView, DeleteView
+)
+from main.forms import NoteForm, NoteUpdateForm
+from main.mixins import NoteSaveMixin
+from main.models import Note
 
 
 class NoteListView(LoginRequiredMixin, ListView):
@@ -42,46 +43,31 @@ class SearchListView(LoginRequiredMixin, ListView):
         return notes
 
 
-class NoteFormView(LoginRequiredMixin, FormView):
+class NoteFormView(LoginRequiredMixin, NoteSaveMixin, FormView):
     template_name = "main/create.html"
     form_class = NoteForm
-    success_url = "/"
+    success_url = reverse_lazy('main')
     
     def form_valid(self, form):
-        note = form.save(commit=False)        
-        if note.title == '':
-            pattern = re.compile(r'\s')
-            matches = pattern.finditer(note.text)
-            positions = [match.start() for match in matches]
-            count = 0
-            for position in positions:
-                if position < 64:
-                    count += 1
-            text = note.text.split(' ')[:count]
-            text = ' '.join(text)
-            note.title = text
-
-        note.last_save = datetime.now()
-        if not note.pk:
-            note.owner = self.request.user
-        note.save()
-        editors = form.cleaned_data['editor']
-        viewers = form.cleaned_data['viewer']
-        note.editor.set(editors)
-        note.viewer.set(viewers)
+        self.save_note(form)
         return redirect('main')
-
+    
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
     template_name = 'main/note.html'
     context_object_name = 'note'
 
+    def has_permission(self, note):
+        return (
+            note.viewer.filter(id=self.request.user.id).exists()
+            or note.editor.filter(id=self.request.user.id).exists()
+            or note.owner_id == self.request.user.id
+        )
+
     def dispatch(self, request, *args, **kwargs):
         note = self.get_object()
-        if note.viewer.filter(id=request.user.id).exists() or \
-            note.editor.filter(id=request.user.id).exists() or \
-            note.owner_id == request.user.id:
+        if self.has_permission(note):
             return super().dispatch(request, *args, **kwargs)
         else:
             return HttpResponseForbidden("You don't have permission to access this note.") 
@@ -89,39 +75,28 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
         
 class NoteDeleteView(DeleteView):
     model = Note
+    success_url = '/'
+    template_name = 'main/delete.html'
+    
 
-
-class NoteUpdateView(LoginRequiredMixin, UpdateView):
+class NoteUpdateView(LoginRequiredMixin, NoteSaveMixin, UpdateView):
     model = Note
     template_name = 'main/create.html'
-    form_class = NoteForm
+    form_class = NoteUpdateForm
+
+    def has_permission(self, note):
+        return (
+            note.editor.filter(id=self.request.user.id).exists()
+            or note.owner_id == self.request.user.id
+    )
 
     def dispatch(self, request, *args, **kwargs):
         note = self.get_object()
-        if note.editor.filter(id=request.user.id).exists() or \
-            note.owner_id == request.user.id:
+        if self.has_permission(note):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("You don't have permission to access this note.")       
-
+            return HttpResponseForbidden("You don't have permission to access this note.")
+        
     def form_valid(self, form):
-        note = form.save(commit=False)        
-        if note.title == '':
-            pattern = re.compile(r'\s')
-            matches = pattern.finditer(note.text)
-            positions = [match.start() for match in matches]
-            count = 0
-            for position in positions:
-                if position < 64:
-                    count += 1
-            text = note.text.split(' ')[:count]
-            text = ' '.join(text)
-            note.title = text
-
-        note.last_save = datetime.now()            
-        note.save()
-        editors = form.cleaned_data['editor']
-        viewers = form.cleaned_data['viewer']
-        note.editor.set(editors)
-        note.viewer.set(viewers)
-        return redirect('main')
+        self.save_note(form)
+        return super().form_valid(form)
