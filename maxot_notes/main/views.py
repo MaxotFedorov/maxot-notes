@@ -20,9 +20,10 @@ class NoteListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         notes = Note.objects.filter(
             Q(owner=self.request.user) | 
-            Q(editor=self.request.user) |
-            Q(viewer=self.request.user)
-        ).order_by('-last_save')
+            Q(editors=self.request.user) |
+            Q(viewers=self.request.user) |
+            Q(is_public=True) 
+        ).order_by('-last_edited_at')
         return notes
     
     
@@ -35,20 +36,29 @@ class SearchListView(LoginRequiredMixin, ListView):
         query = self.request.GET.get('search')
         notes = Note.objects.filter(
             (Q(owner=self.request.user) | 
-            Q(editor=self.request.user) |
-            Q(viewer=self.request.user))                
+            Q(editors=self.request.user) |
+            Q(viewers=self.request.user) |
+            Q(is_public=True) )                
             & (Q(title__icontains=query) | 
-                Q(text__icontains=query))
-        ).order_by('-last_save')
+               Q(content__icontains=query))
+        ).order_by('-last_edited_at')
         return notes
 
 
-class NoteFormView(LoginRequiredMixin, NoteSaveMixin, FormView):
+class NoteCreateView(LoginRequiredMixin, NoteSaveMixin, FormView):
+    model = Note
     template_name = "main/create.html"
     form_class = NoteForm
     success_url = reverse_lazy('main')
     
     def form_valid(self, form):
+        parent_note_id = self.kwargs.get('parent_note_id')
+        parent_note = None
+        if parent_note_id:
+            parent_note = Note.objects.get(pk=parent_note_id)
+        note = form.save(commit=False)
+        if parent_note:
+            note.parent_note = parent_note
         self.save_note(form)
         return redirect('main')
     
@@ -60,9 +70,10 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
 
     def has_permission(self, note):
         return (
-            note.viewer.filter(id=self.request.user.id).exists()
-            or note.editor.filter(id=self.request.user.id).exists()
+            note.viewers.filter(id=self.request.user.id).exists()
+            or note.editors.filter(id=self.request.user.id).exists()
             or note.owner_id == self.request.user.id
+            or note.is_public == True
         )
 
     def dispatch(self, request, *args, **kwargs):
@@ -86,7 +97,7 @@ class NoteUpdateView(LoginRequiredMixin, NoteSaveMixin, UpdateView):
 
     def has_permission(self, note):
         return (
-            note.editor.filter(id=self.request.user.id).exists()
+            note.editors.filter(id=self.request.user.id).exists()
             or note.owner_id == self.request.user.id
     )
 

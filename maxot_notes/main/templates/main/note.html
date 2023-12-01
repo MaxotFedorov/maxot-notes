@@ -6,8 +6,9 @@
     <div>
         <h4>Note: {{ note.title }}</h4>
         <div style="background-color: #4f4f4f">
-            <p>{{ note.text  }}</p>
-            <p>{{ note.last_save }}</p>
+            <p>{{ note.content | safe }}</p>
+            <p>Created at: {{ note.created_at }}</p>
+            <p>Last edited at: {{ note.last_edited_at }}</p>
             <a href="{% url 'note_edit' note.id %}" style="color: #ffffff; text-decoration: none">Edit</a>
             <a href="{% url 'note_delete' note.id %}" style="color: #ffffff; text-decoration: none">Delete</a>
             <br>
@@ -16,14 +17,14 @@
             <ul>
                 <li><a href="{% url 'username' note.owner.username %}" style="color: #ffffff; text-decoration: none">
                     <img class="profile-image" src="{{ note.owner.profile.image.url }}">
-                    {{ note.owner.get_username }}</a>
+                    {{ note.owner.username  }}</a>
                 </li>
             </ul>
 
-            {% if note.editor.all %}
+            {% if note.editors.all %}
                 <p>Editors users:</p>
                 <ul>
-                    {% for user in note.editor.all %}
+                    {% for user in note.editors.all %}
                     <li><a href="{% url 'username' user.username %}" style="color: #ffffff; text-decoration: none">
                         <img class="profile-image" src="{{ user.profile.image.url }}">
                         {{ user.get_username }}</a>
@@ -47,6 +48,16 @@
             {% else %}
                 <p>No viewers found</p>
             {% endif %} 
+
+            <p>Public: {{ note.is_public }}</p>
+            <p>Parent Note: {{ note.parent_note }}</p>
+            <p>Sub Notes:</p>
+            <ul>
+            {% for sub_note in note.sub_notes.all %}
+                <li>{{ sub_note }}</li>
+            {% endfor %}
+            </ul>
+
         </div>
         
     </div>

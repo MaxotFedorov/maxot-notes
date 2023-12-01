@@ -13,8 +13,8 @@
                 {% for note in notes %}
                     <div style="background-color: #4f4f4f">
                         <h4>{{ note.title }}</h4>
-                        <p>{{ note.text  }}</p>
-                        <p>{{ note.last_save }}</p>
+                        <p>{{ note.content | safe }}</p>
+                        <p>{{ note.last_edited_at }}</p>
                         <a href="{% url 'note' note.id %}" style="color: #ffffff; text-decoration: none">View</a>
                     </div><br>
                 {% endfor %}

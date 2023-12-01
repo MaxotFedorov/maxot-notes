@@ -2,20 +2,17 @@ from main.models import Note
 from django.forms import ModelForm, TextInput, Textarea
 from django.forms import CharField, PasswordInput, ValidationError
 from django.contrib.auth.models import User
-
+from ckeditor.widgets import CKEditorWidget
 
 class NoteForm(ModelForm):
     class Meta:
         model = Note
-        fields = ['title', 'text', 'last_save', 
-                  'owner', 'editor', 'viewer']
+        fields = ['title', 'content', 'viewers', 'editors', 'is_public', 'parent_note']
         widgets = {
             "title": TextInput(attrs={
                 "placeholder" : "Title"
             }),
-            "text": Textarea(attrs={
-                "placeholder" : "Note"
-            })
+            'content': CKEditorWidget(),
         }
         
         

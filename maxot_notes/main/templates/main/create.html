@@ -12,10 +12,11 @@
     <div>
         <form method="post">
             {% csrf_token %}
-            {{ form.title.label_tag }}<br> {{ form.title }}<br>
+            {% comment %} {{ form.title.label_tag }}<br> {{ form.title }}<br>
             {{ form.text.label_tag }}<br> {{ form.text }}<br>
             {{ form.editor.label_tag }}<br> {{ form.editor }}<br>
-            {{ form.viewer.label_tag }}<br> {{ form.viewer }}<br>
+            {{ form.viewer.label_tag }}<br> {{ form.viewer }}<br> {% endcomment %}
+            {{ form.as_p }}
             <span>{{ error }}</span>
             <button type="submit">Save</button> 
         </form>
